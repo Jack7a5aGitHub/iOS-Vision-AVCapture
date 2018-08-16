@@ -2,8 +2,6 @@
 //  ViewController.swift
 //  Text Detection Starter Project
 //
-//  Created by Sai Kambampati on 6/21/17.
-//  Copyright © 2017 AppCoda. All rights reserved.
 //
 
 import UIKit
