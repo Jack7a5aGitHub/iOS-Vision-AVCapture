@@ -96,16 +96,10 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
        
 //        let textRequest = VNDetectTextRectanglesRequest(completionHandler: self.detectTextHandler)
 //        textRequest.reportCharacterBoxes = true
-        objectRequest.maximumObservations = 1
+        objectRequest.maximumObservations = 4
         objectRequest.minimumConfidence = 0.6
         objectRequest.minimumAspectRatio = 0.3
-        let drawingLayer = CALayer()
-        drawingLayer.anchorPoint = CGPoint.zero
-        drawingLayer.bounds = CGRect(x: 0, y: 0, width: 100, height: 100)
-        drawingLayer.position = CGPoint(x: 0, y: 0)
-        drawingLayer.opacity = 0.5
-        pathLayer = drawingLayer
-        imageView.layer.addSublayer(pathLayer!)
+
         self.request = [objectRequest]
     }
     
@@ -115,6 +109,7 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
             return
         }
             let result = req.map({ $0 as? VNRectangleObservation})
+        
             DispatchQueue.main.async {
                 if result.isEmpty {
                     self.cameraButton.setTitle("looking", for: .normal)

@@ -21,21 +21,35 @@ final class HandlePhotoViewController: UIViewController {
         handleVC.image = photo
         return handleVC
     }
+    // MARK: - Properties
     var image = UIImage()
-    @IBOutlet weak private var businessCardImageView: UIImageView!
+    private var correctedImageArray = [UIImage]()
+    private let cardProvider = CardProvider()
+    // MARK: - IBOutlet
+    @IBOutlet weak var cardCollectionView: UICollectionView!
+    
+    // MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        setupImageView()
+        setupCollectionView()
         setupVision()
     }
-    private func setupImageView() {
-        businessCardImageView.contentMode = .scaleAspectFit
+    private func setupCollectionView() {
+        cardCollectionView.delegate = self
+        cardCollectionView.dataSource = cardProvider
     }
 }
-
+// MARK: - CollectionDelegate
+extension HandlePhotoViewController: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let width = collectionView.bounds.width
+        let height = width * 3 / 4
+        return CGSize(width: width, height: height)
+    }
+}
 // MARK: - Vision func
 extension HandlePhotoViewController {
     private func setupVision() {
@@ -46,21 +60,23 @@ extension HandlePhotoViewController {
                 print("failed to detect", err)
                 return
             }
+            print("resssult", req.results?.count)
             req.results?.forEach({ res in
                 guard let observation = res as? VNRectangleObservation else { return }
                 
                 let ciImage = self.extractPerspectiveRect(observation, from: cgImage)
                 let observedImage = self.convert(cmage: ciImage)
-                
-                DispatchQueue.main.async {
-                    
-                    self.businessCardImageView.image = observedImage
-                    
-                }
-                
+                self.correctedImageArray.append(observedImage)
             })
+            DispatchQueue.main.async {
+                print("bbbb", self.correctedImageArray.count)
+                self.cardProvider.getCardImage(imageArray: self.correctedImageArray)
+                self.cardProvider.getCardImage(imageArray: self.correctedImageArray)
+                self.cardCollectionView.reloadData()
+                
+            }
         }
-        request.maximumObservations = 1
+        request.maximumObservations = 4
         request.minimumConfidence = 0.6
         request.minimumAspectRatio = 0.3
         
