@@ -35,6 +35,7 @@ final class HandlePhotoViewController: UIViewController {
         businessCardImageView.contentMode = .scaleAspectFit
     }
 }
+
 // MARK: - Vision func
 extension HandlePhotoViewController {
     private func setupVision() {
@@ -47,7 +48,6 @@ extension HandlePhotoViewController {
             }
             req.results?.forEach({ res in
                 guard let observation = res as? VNRectangleObservation else { return }
-                print("bbb", observation.boundingBox, observation.boundingBox.minX, observation.boundingBox.width, observation.boundingBox.minY, observation.boundingBox.height)
                 
                 let ciImage = self.extractPerspectiveRect(observation, from: cgImage)
                 let observedImage = self.convert(cmage: ciImage)
@@ -60,8 +60,8 @@ extension HandlePhotoViewController {
                 
             })
         }
-        request.maximumObservations = 8
-        request.minimumConfidence = 0.1
+        request.maximumObservations = 1
+        request.minimumConfidence = 0.6
         request.minimumAspectRatio = 0.3
         
         let handler = VNImageRequestHandler(cgImage: cgImage, options: [:])

@@ -38,11 +38,9 @@ class ViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-//        startLiveVideo()
-//        stillImageSetting()
-//        startTextDetection()
-//        view.addSubview(cameraButton)
+        super.viewWillAppear(animated)
     }
+ 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         imageView.layer.sublayers?[0].frame = imageView.bounds
@@ -56,6 +54,8 @@ class ViewController: UIViewController {
         stillImageOutput.capturePhoto(with: photoSettings, delegate: self)
     }
 }
+
+// MARK: - AVCapturePhotoCaptureDelegate
 extension ViewController: AVCapturePhotoCaptureDelegate {
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
         let imageData = photo.fileDataRepresentation()
@@ -96,7 +96,7 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
        
 //        let textRequest = VNDetectTextRectanglesRequest(completionHandler: self.detectTextHandler)
 //        textRequest.reportCharacterBoxes = true
-        objectRequest.maximumObservations = 8
+        objectRequest.maximumObservations = 1
         objectRequest.minimumConfidence = 0.6
         objectRequest.minimumAspectRatio = 0.3
         let drawingLayer = CALayer()
@@ -115,8 +115,16 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
             return
         }
             let result = req.map({ $0 as? VNRectangleObservation})
-        
             DispatchQueue.main.async {
+                if result.isEmpty {
+                    self.cameraButton.setTitle("looking", for: .normal)
+                    self.cameraButton.setTitleColor(UIColor.lightGray, for: .normal)
+                    self.cameraButton.isEnabled = false
+                } else {
+                    self.cameraButton.setTitle("Capture", for: .normal)
+                    self.cameraButton.setTitleColor(UIColor.blue, for: .normal)
+                    self.cameraButton.isEnabled = true
+                }
                 self.imageView.layer.sublayers?.removeSubrange(1...)
                 
                 let drawLayer = self.imageView.layer
