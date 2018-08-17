@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Handle Photo View Controller-->
+        <scene sceneID="CYl-V0-ueg">
+            <objects>
+                <viewController storyboardIdentifier="HandlePhotoViewController" id="BP5-aA-Lp5" customClass="HandlePhotoViewController" customModule="Text_Detection_Starter_Project" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="4B7-4b-CRZ">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="vtz-td-h3T">
+                                <rect key="frame" x="0.0" y="185" width="375" height="296"/>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="vtz-td-h3T" firstAttribute="trailing" secondItem="eqt-sz-Obf" secondAttribute="trailing" id="5al-TG-dir"/>
+                            <constraint firstItem="eqt-sz-Obf" firstAttribute="bottom" secondItem="vtz-td-h3T" secondAttribute="bottom" constant="186" id="HHj-C5-tAJ"/>
+                            <constraint firstItem="vtz-td-h3T" firstAttribute="leading" secondItem="eqt-sz-Obf" secondAttribute="leading" id="U1b-7x-iAt"/>
+                            <constraint firstItem="vtz-td-h3T" firstAttribute="top" secondItem="eqt-sz-Obf" secondAttribute="top" constant="121" id="W6O-Ck-gvb"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="eqt-sz-Obf"/>
+                    </view>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                    <connections>
+                        <outlet property="businessCardImageView" destination="vtz-td-h3T" id="abc-kK-Fdz"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="SJo-lu-pVD" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="197.59999999999999" y="111.99400299850076"/>
+        </scene>
+    </scenes>
+</document>

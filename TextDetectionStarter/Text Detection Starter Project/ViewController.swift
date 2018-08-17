@@ -12,28 +12,69 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var imageView: UIImageView!
     private var session = AVCaptureSession()
+    private let stillImageOutput = AVCapturePhotoOutput()
     private var request = [VNRequest]()
     private var lastObservation: VNRectangleObservation?
     private var sequenceHandler = VNSequenceRequestHandler()
     private var rectangleLayer: CAShapeLayer?
     private var pathLayer: CALayer?
-    
+    private lazy var cameraButton: UIButton = {
+       let button = UIButton()
+        button.layer.cornerRadius = 10.0
+        let x = imageView.bounds.width / 2 - 25
+        let y = imageView.bounds.height + 25
+        button.frame = CGRect(x: x, y: y, width: 100, height: 50)
+        button.setTitle("Capture", for: .normal)
+        button.setTitleColor(UIColor.blue, for: .normal)
+        button.addTarget(self, action: #selector(capturePhoto), for: .touchUpInside)
+        return button
+    }()
     override func viewDidLoad() {
         super.viewDidLoad()
+        startLiveVideo()
+        stillImageSetting()
+        startTextDetection()
+        view.addSubview(cameraButton)
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        startLiveVideo()
-        startTextDetection() 
+//        startLiveVideo()
+//        stillImageSetting()
+//        startTextDetection()
+//        view.addSubview(cameraButton)
     }
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         imageView.layer.sublayers?[0].frame = imageView.bounds
     }
-  
+    @objc private func capturePhoto() {
+        print("Capture Capture")
+        let photoSettings = AVCapturePhotoSettings()
+        photoSettings.isAutoStillImageStabilizationEnabled = true
+        photoSettings.isHighResolutionPhotoEnabled = true
+        photoSettings.flashMode = .auto
+        stillImageOutput.capturePhoto(with: photoSettings, delegate: self)
+    }
 }
-
+extension ViewController: AVCapturePhotoCaptureDelegate {
+    func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
+        let imageData = photo.fileDataRepresentation()
+        guard let data = imageData,
+              let photo = UIImage(data: data)  else {
+            return
+        }
+        let handleVC = HandlePhotoViewController.make(photo: photo)
+        navigationController?.pushViewController(handleVC, animated: true)
+    }
+    @objc private func processVision() {
+        print("Do Vision and Cut busniess card")
+    }
+}
 extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
+    private func stillImageSetting() {
+        stillImageOutput.isHighResolutionCaptureEnabled = true
+        session.addOutput(stillImageOutput)
+    }
     private func startLiveVideo() {
         session.sessionPreset = AVCaptureSession.Preset.photo
         let captureDevice = AVCaptureDevice.default(for: .video)
@@ -79,7 +120,6 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
                 self.imageView.layer.sublayers?.removeSubrange(1...)
                 
                 let drawLayer = self.imageView.layer
-                print("aaa", drawLayer.frame)
                 self.draw(rectangles: result as! [VNRectangleObservation], onImageWithBounds: drawLayer.bounds)
                 drawLayer.setNeedsDisplay()
                    

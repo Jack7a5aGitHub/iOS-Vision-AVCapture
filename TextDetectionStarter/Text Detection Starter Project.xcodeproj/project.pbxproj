@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0A215E9F2126A62700E6EC0B /* HandlePhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A215E9E2126A62700E6EC0B /* HandlePhotoViewController.swift */; };
+		0A215EA12126A6C000E6EC0B /* HandlePhotoViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0A215EA02126A6C000E6EC0B /* HandlePhotoViewController.storyboard */; };
 		8B0D6AFF1EFA582B00544F3D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B0D6AFE1EFA582B00544F3D /* AppDelegate.swift */; };
 		8B0D6B011EFA582B00544F3D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B0D6B001EFA582B00544F3D /* ViewController.swift */; };
 		8B0D6B041EFA582B00544F3D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8B0D6B021EFA582B00544F3D /* Main.storyboard */; };
@@ -15,6 +17,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0A215E9E2126A62700E6EC0B /* HandlePhotoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandlePhotoViewController.swift; sourceTree = "<group>"; };
+		0A215EA02126A6C000E6EC0B /* HandlePhotoViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = HandlePhotoViewController.storyboard; sourceTree = "<group>"; };
 		8B0D6AFB1EFA582B00544F3D /* Text Detection Starter Project.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Text Detection Starter Project.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B0D6AFE1EFA582B00544F3D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8B0D6B001EFA582B00544F3D /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -60,6 +64,8 @@
 				8B0D6B051EFA582B00544F3D /* Assets.xcassets */,
 				8B0D6B071EFA582B00544F3D /* LaunchScreen.storyboard */,
 				8B0D6B0A1EFA582C00544F3D /* Info.plist */,
+				0A215E9E2126A62700E6EC0B /* HandlePhotoViewController.swift */,
+				0A215EA02126A6C000E6EC0B /* HandlePhotoViewController.storyboard */,
 			);
 			path = "Text Detection Starter Project";
 			sourceTree = "<group>";
@@ -122,6 +128,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0A215EA12126A6C000E6EC0B /* HandlePhotoViewController.storyboard in Resources */,
 				8B0D6B091EFA582B00544F3D /* LaunchScreen.storyboard in Resources */,
 				8B0D6B061EFA582B00544F3D /* Assets.xcassets in Resources */,
 				8B0D6B041EFA582B00544F3D /* Main.storyboard in Resources */,
@@ -136,6 +143,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8B0D6B011EFA582B00544F3D /* ViewController.swift in Sources */,
+				0A215E9F2126A62700E6EC0B /* HandlePhotoViewController.swift in Sources */,
 				8B0D6AFF1EFA582B00544F3D /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
