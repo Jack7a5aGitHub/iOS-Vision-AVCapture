@@ -66,6 +66,7 @@ extension HandlePhotoViewController {
                 
                 let ciImage = self.extractPerspectiveRect(observation, from: cgImage)
                 let observedImage = self.convert(cmage: ciImage)
+                print("orientation", observedImage.imageOrientation.rawValue)
                 self.correctedImageArray.append(observedImage)
             })
             DispatchQueue.main.async {

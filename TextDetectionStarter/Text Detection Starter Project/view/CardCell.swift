@@ -16,6 +16,8 @@ final class CardCell: UICollectionViewCell {
         didSet {
             cardImageView.contentMode = .scaleAspectFit
             cardImageView.image = correctedImage
+            print("orientation2", cardImageView.image?.flipsForRightToLeftLayoutDirection)
+            
         }
     }
 }

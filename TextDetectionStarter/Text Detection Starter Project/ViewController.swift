@@ -96,7 +96,7 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
        
 //        let textRequest = VNDetectTextRectanglesRequest(completionHandler: self.detectTextHandler)
 //        textRequest.reportCharacterBoxes = true
-        objectRequest.maximumObservations = 4
+        objectRequest.maximumObservations = 8
         objectRequest.minimumConfidence = 0.6
         objectRequest.minimumAspectRatio = 0.3
 
