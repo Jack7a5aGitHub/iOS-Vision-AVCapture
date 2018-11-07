@@ -4,4 +4,4 @@
 
 In order to develop app like Sansan, i try to create a sample which is able to carry out rectangle recognization. 
 
-![](cardDetectionGif.gif  =338x600)
+![](cardDetectionGif.gif)
