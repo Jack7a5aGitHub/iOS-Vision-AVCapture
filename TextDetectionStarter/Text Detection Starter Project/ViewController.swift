@@ -239,6 +239,7 @@ extension ViewController {
         rect.size.width *= imageWidth
         rect.size.height *= imageHeight
         
+        print("bounding", imageWidth,imageHeight, bounds.origin.x, bounds.origin.y)
         return rect
     }
     private func shapeLayer(color: UIColor, frame: CGRect) -> CAShapeLayer {
@@ -250,13 +251,13 @@ extension ViewController {
         layer.shadowOpacity = 0
         layer.shadowRadius = 0
         layer.borderWidth = 2
-        
         // Vary the line color according to input.
         layer.borderColor = color.cgColor
         
         // Locate the layer.
         layer.anchorPoint = .zero
-        layer.frame = frame
+        layer.frame = CGRect(x: frame.midX / 2, y: frame.origin.y, width: frame.size.height, height: frame.size.height)
+        layer.cornerRadius = layer.frame.width / 2
         layer.masksToBounds = true
         
         // Transform the layer to have same coordinate system as the imageView underneath it.
