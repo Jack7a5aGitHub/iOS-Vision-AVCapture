@@ -18,6 +18,7 @@ class ViewController: UIViewController {
     private var sequenceHandler = VNSequenceRequestHandler()
     private var rectangleLayer: CAShapeLayer?
     private var pathLayer: CALayer?
+    private var counter = 0
     private lazy var cameraButton: UIButton = {
        let button = UIButton()
         button.layer.cornerRadius = 10.0
@@ -33,7 +34,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         startLiveVideo()
         stillImageSetting()
-        startTextDetection()
+        startDetection()
         view.addSubview(cameraButton)
     }
     
@@ -90,16 +91,19 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
         imageView.layer.addSublayer(imageLayer)
         session.startRunning()
     }
-    private func startTextDetection() {
+    // request -> obtain observations -> draw layer over observation
+    private func startDetection() {
         
         let objectRequest = VNDetectRectanglesRequest(completionHandler: self.detectObjectHandler)
        
 //        let textRequest = VNDetectTextRectanglesRequest(completionHandler: self.detectTextHandler)
 //        textRequest.reportCharacterBoxes = true
-        objectRequest.maximumObservations = 4
+        objectRequest.maximumObservations = 8
+        objectRequest.quadratureTolerance = 20
         objectRequest.minimumConfidence = 0.6
-        objectRequest.minimumAspectRatio = 0.3
-
+        objectRequest.minimumAspectRatio = 0.5
+        objectRequest.maximumAspectRatio = 0.7
+       // objectRequest.minimumSize = 0.3
         self.request = [objectRequest]
     }
     
@@ -109,7 +113,7 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
             return
         }
             let result = req.map({ $0 as? VNRectangleObservation})
-        
+   
             DispatchQueue.main.async {
                 if result.isEmpty {
                     self.cameraButton.setTitle("looking", for: .normal)
@@ -125,69 +129,70 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
                 let drawLayer = self.imageView.layer
                 self.draw(rectangles: result as! [VNRectangleObservation], onImageWithBounds: drawLayer.bounds)
                 drawLayer.setNeedsDisplay()
+                
                    
             }
         
     }
-    private func detectTextHandler(request: VNRequest, error: Error?) {
-        guard let observation = request.results else {
-            print("no result")
-            return
-        }
-        let result = observation.map({$0 as? VNTextObservation})
-        
-        DispatchQueue.main.async {
-            self.imageView.layer.sublayers?.removeSubrange(1...)
-            for region in result {
-                guard let myRegion = region else {
-                    continue
-                }
-                self.highlightWord(box: myRegion)
-                if let boxes = region?.characterBoxes {
-                    for characterBox in boxes {
-                        self.highlightLetters(box: characterBox)
-                    }
-                }
-            }
-        }
-    }
-  
-    private func highlightWord(box: VNTextObservation) {
-        guard let boxes = box.characterBoxes else {
-            return
-        }
-        var maxX: CGFloat = 9999.0
-        var minX: CGFloat = 0.0
-        var maxY: CGFloat = 9999.0
-        var minY: CGFloat = 0.0
-        
-        for char in boxes {
-            if char.bottomLeft.x < maxX {
-                maxX = char.bottomLeft.x
-            }
-            if char.bottomRight.x > minX {
-                minX = char.bottomRight.x
-            }
-            if char.bottomRight.y < maxY {
-                maxY = char.bottomRight.y
-            }
-            if char.topRight.y > minY {
-                minY = char.topRight.y
-            }
-        }
-    }
-    private func highlightLetters(box: VNRectangleObservation) {
-        let xCord = box.topLeft.x * imageView.frame.size.width
-        let yCord = (1 - box.topLeft.y) * imageView.frame.size.height
-        let width = (box.topRight.x - box.bottomLeft.x) * imageView.frame.size.width
-        let height = (box.topLeft.y - box.bottomLeft.y) * imageView.frame.size.height
-        let outline = CALayer()
-        outline.frame = CGRect(x: xCord, y: yCord, width: width, height: height)
-        outline.borderWidth = 1.0
-        outline.borderColor = UIColor.blue.cgColor
-        imageView.layer.addSublayer(outline)
-    }
-   
+//    private func detectTextHandler(request: VNRequest, error: Error?) {
+//        guard let observation = request.results else {
+//            print("no result")
+//            return
+//        }
+//        let result = observation.map({$0 as? VNTextObservation})
+//
+//        DispatchQueue.main.async {
+//            self.imageView.layer.sublayers?.removeSubrange(1...)
+//            for region in result {
+//                guard let myRegion = region else {
+//                    continue
+//                }
+//                self.highlightWord(box: myRegion)
+//                if let boxes = region?.characterBoxes {
+//                    for characterBox in boxes {
+//                        self.highlightLetters(box: characterBox)
+//                    }
+//                }
+//            }
+//        }
+//    }
+//
+//    private func highlightWord(box: VNTextObservation) {
+//        guard let boxes = box.characterBoxes else {
+//            return
+//        }
+//        var maxX: CGFloat = 9999.0
+//        var minX: CGFloat = 0.0
+//        var maxY: CGFloat = 9999.0
+//        var minY: CGFloat = 0.0
+//
+//        for char in boxes {
+//            if char.bottomLeft.x < maxX {
+//                maxX = char.bottomLeft.x
+//            }
+//            if char.bottomRight.x > minX {
+//                minX = char.bottomRight.x
+//            }
+//            if char.bottomRight.y < maxY {
+//                maxY = char.bottomRight.y
+//            }
+//            if char.topRight.y > minY {
+//                minY = char.topRight.y
+//            }
+//        }
+//    }
+//    private func highlightLetters(box: VNRectangleObservation) {
+//        let xCord = box.topLeft.x * imageView.frame.size.width
+//        let yCord = (1 - box.topLeft.y) * imageView.frame.size.height
+//        let width = (box.topRight.x - box.bottomLeft.x) * imageView.frame.size.width
+//        let height = (box.topLeft.y - box.bottomLeft.y) * imageView.frame.size.height
+//        let outline = CALayer()
+//        outline.frame = CGRect(x: xCord, y: yCord, width: width, height: height)
+//        outline.borderWidth = 1.0
+//        outline.borderColor = UIColor.blue.cgColor
+//        imageView.layer.addSublayer(outline)
+//    }
+//
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
             return
@@ -200,27 +205,30 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
             }
         let imageRequestHandler = VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: CGImagePropertyOrientation(rawValue: 6)!, options: requestOptions)
                 do {
+                    // start rectangle recognization
                     try imageRequestHandler.perform(self.request)
                 } catch {
                     print(error)
             }
- 
     }
 }
 // MARK: - Helper Method
 extension ViewController {
+    
     // Rectangles are RED.
     private func draw(rectangles: [VNRectangleObservation], onImageWithBounds bounds: CGRect) {
         CATransaction.begin()
+      
         for observation in rectangles {
+    
             let rectBox = boundingBox(forRegionOfInterest: observation.boundingBox, withinImageBounds: bounds)
             let rectLayer = shapeLayer(color: .red, frame: rectBox)
             
             // Add to pathLayer on top of image.
-            
             self.imageView.layer.addSublayer(rectLayer)
         }
         CATransaction.commit()
+     
     }
     private func boundingBox(forRegionOfInterest: CGRect, withinImageBounds bounds: CGRect) -> CGRect {
         
@@ -238,11 +246,11 @@ extension ViewController {
         // Rescale normalized coordinates.
         rect.size.width *= imageWidth
         rect.size.height *= imageHeight
-        
-        print("bounding", imageWidth,imageHeight, bounds.origin.x, bounds.origin.y)
         return rect
     }
+    
     private func shapeLayer(color: UIColor, frame: CGRect) -> CAShapeLayer {
+        
         // Create a new layer.
         let layer = CAShapeLayer()
         
@@ -254,7 +262,7 @@ extension ViewController {
         // Vary the line color according to input.
         layer.borderColor = color.cgColor
         
-        // Locate the layer.
+        // Locate the layer. make circle layer
         layer.anchorPoint = .zero
         layer.frame = CGRect(x: frame.midX / 2, y: frame.origin.y, width: frame.size.height, height: frame.size.height)
         layer.cornerRadius = layer.frame.width / 2
@@ -262,7 +270,6 @@ extension ViewController {
         
         // Transform the layer to have same coordinate system as the imageView underneath it.
         layer.transform = CATransform3DMakeScale(1, -1, 1)
-        
         return layer
     }
 }
